@@ -53,9 +53,11 @@ func main() {
 			fmt.Printf("err when trying to ensure dir:%v\n", err)
 			continue
 		}
-		err = ioutil.WriteFile(jsonExt(newpath), []byte(r.Content), 0644)
+		outpath := jsonExt(newpath)
+		err = ioutil.WriteFile(outpath, []byte(r.Content), 0644)
 		if err != nil {
 			fmt.Printf("err when writing file %v\n", err)
 		}
+		fmt.Printf(">> Generating %s\n", outpath)
 	}
 }

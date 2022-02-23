@@ -1,0 +1,3 @@
+{
+  dynamoDb: 'ledgers-new-abc',
+}
