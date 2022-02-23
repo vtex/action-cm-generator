@@ -1,1 +1,0 @@
-['VTEX Payment']

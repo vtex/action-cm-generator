@@ -1,3 +1,0 @@
-{
-  dynamoDb: 'ledgers-new-abc',
-}
