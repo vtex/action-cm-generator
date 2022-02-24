@@ -62,6 +62,6 @@ func main() {
 		if err != nil {
 			fmt.Printf("err when writing file %v\n", err)
 		}
-		fmt.Printf(">> Generating %s\n", outpath)
+		fmt.Printf("[cm-generator]: Generating %s\n", outpath)
 	}
 }
