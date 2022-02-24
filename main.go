@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/google/go-jsonnet"
+	"github.com/sethvargo/go-githubactions"
 	"github.com/vtex/action-cm-generator/gen"
 )
 
@@ -23,10 +24,22 @@ func jsonExt(absPath string) string {
 	return absPath[0:len(absPath)-len(ext)] + jsonExtension
 }
 
+// inputOrDefault gets the input value or use default if empty.
+func inputOrDefault(name, defaultValue string) string {
+	input := githubactions.GetInput(name)
+	if len(input) == 0 {
+		return defaultValue
+	}
+	return input
+
+}
+
 func main() {
+	inputDir := inputOrDefault(dirIn, dirIn)
+	outputDir := inputOrDefault(dirOut, dirOut)
 	input := make(chan gen.File)
 	go func() {
-		err := filepath.Walk(dirIn,
+		err := filepath.Walk(inputDir,
 			func(path string, f os.FileInfo, err error) error {
 				if err != nil {
 					return err
@@ -46,12 +59,12 @@ func main() {
 	}()
 	vm := jsonnet.MakeVM()
 	compiler := gen.NewCompiler(vm)
-	err := os.RemoveAll(dirOut)
+	err := os.RemoveAll(outputDir)
 	if err != nil {
 		log.Fatal(err)
 	}
 	for r := range compiler.Cmp(input) {
-		newpath := strings.Replace(r.Path, dirIn, dirOut, 1)
+		newpath := strings.Replace(r.Path, inputDir, outputDir, 1)
 		err := os.MkdirAll(filepath.Dir(newpath), os.ModePerm)
 		if err != nil {
 			fmt.Printf("err when trying to ensure dir:%v\n", err)
