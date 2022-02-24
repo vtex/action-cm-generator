@@ -46,6 +46,10 @@ func main() {
 	}()
 	vm := jsonnet.MakeVM()
 	compiler := gen.NewCompiler(vm)
+	err := os.RemoveAll(dirOut)
+	if err != nil {
+		log.Fatal(err)
+	}
 	for r := range compiler.Cmp(input) {
 		newpath := strings.Replace(r.Path, dirIn, dirOut, 1)
 		err := os.MkdirAll(filepath.Dir(newpath), os.ModePerm)
