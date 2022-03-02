@@ -25,6 +25,27 @@ jobs:
           out: "gen"
 ```
 
+Or if you prefer, the docker version (17x faster)
+
+```yaml
+on:
+  pull_request:
+    branches:
+      - main
+      - master
+name: Pull request workflow
+jobs:
+  validate_configurations:
+    name: Validate configurations
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: docker://public.ecr.aws/n0a0a3c3/action-cm-generator:latest
+        with:
+          in: "in"
+          out: "gen"
+```
+
 | Inputs | Required | Default | Description                            |
 | ------ | -------- | ------- | -------------------------------------- |
 | `in`   | No       | "in"    | The folder that contains jsonnet files |
