@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"cuelang.org/go/cue/cuecontext"
 	"github.com/google/go-jsonnet"
 	"github.com/sethvargo/go-githubactions"
 	"github.com/vtex/action-cm-generator/gen"
@@ -39,6 +40,7 @@ func main() {
 	outputDir := inputOrDefault(dirOut, dirOut)
 	input := make(chan gen.File)
 	go func() {
+
 		err := filepath.Walk(inputDir,
 			func(path string, f os.FileInfo, err error) error {
 				if err != nil {
@@ -58,7 +60,7 @@ func main() {
 		}
 	}()
 	vm := jsonnet.MakeVM()
-	compiler := gen.NewCompiler(vm)
+	compiler := gen.NewCompiler(vm, cuecontext.New())
 	err := os.RemoveAll(outputDir)
 	if err != nil {
 		log.Fatal(err)
