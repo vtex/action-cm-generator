@@ -3,11 +3,13 @@ package main
 import (
 	"log"
 	"os"
-	"path/filepath"
 
 	"github.com/google/go-jsonnet"
 	"github.com/sethvargo/go-githubactions"
 	"github.com/vtex/action-cm-generator/gen"
+	"github.com/vtex/action-cm-generator/gen/config"
+	"github.com/vtex/action-cm-generator/gen/disk"
+	"github.com/vtex/action-cm-generator/gen/jn"
 )
 
 const dirIn = "in"
@@ -26,51 +28,21 @@ func inputOrDefault(name, defaultValue string) string {
 func main() {
 	inputDir := inputOrDefault(dirIn, dirIn)
 	outputDir := inputOrDefault(dirOut, dirOut)
-	files := make(chan gen.File)
-
-	go func() {
-		err := filepath.Walk(inputDir,
-			func(path string, f os.FileInfo, err error) error {
-				if err != nil {
-					return err
-				}
-				if f.IsDir() {
-					return nil
-				}
-				files <- gen.File{
-					Path: path,
-				}
-				return nil
-			})
-
-		close(files)
-
-		if err != nil {
-			log.Println(err)
-		}
-	}()
-
-	vm := jsonnet.MakeVM()
-
-	compiler := gen.NewCompiler(vm)
-	parser := gen.NewParser()
-	validator := gen.NewValidator()
-	exporter := gen.NewExporter(inputDir, outputDir)
 
 	err := os.RemoveAll(outputDir)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	err = exporter.Export(
-		validator.Validate(
-			parser.Parse(
-				compiler.Compile(files),
-			),
-		),
-	)
+	runner := gen.Runner{
+		Reader:    disk.NewReader(inputDir),
+		Compiler:  jn.NewCompiler(jsonnet.MakeVM()),
+		Parser:    jn.NewParser(),
+		Validator: config.NewValidator(),
+		Exporter:  disk.NewExporter(inputDir, outputDir),
+	}
 
-	if err != nil {
+	if err = runner.Run(); err != nil {
 		log.Fatal(err)
 	}
 }
