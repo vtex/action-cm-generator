@@ -1,7 +1,6 @@
 package disk
 
 import (
-	"encoding/json"
 	"io/ioutil"
 	"log"
 	"os"
@@ -10,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/vtex/action-cm-generator/gen"
+	"github.com/vtex/action-cm-generator/gen/util"
 )
 
 // Exporter is used to write config final result somewhere.
@@ -26,9 +26,6 @@ func jsonExt(absPath string) string {
 	return absPath[0:len(absPath)-len(ext)] + jsonExtension
 }
 
-const indentationLevel = "   " // 4 spaces of identation
-const noPrefix = ""            // no prefix
-
 // Export receives a channel of configuration and write them on disk.
 func (e *Exporter) Export(in <-chan gen.Config) error {
 	logger := log.New(os.Stdout, log.Prefix(), log.Flags())
@@ -44,7 +41,7 @@ func (e *Exporter) Export(in <-chan gen.Config) error {
 			continue
 		}
 
-		bts, err := json.MarshalIndent(config.Content, noPrefix, indentationLevel)
+		bts, err := util.MarshalIndent(config.Content)
 
 		if err != nil {
 			logger.Printf("err when marshalling file %v\n", err)
