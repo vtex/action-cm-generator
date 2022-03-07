@@ -16,12 +16,10 @@ type Validator struct{}
 // Validate returns a channel of all validated files.
 func (v *Validator) Validate(in <-chan gen.Config) (out <-chan gen.Config) {
 	ch := make(chan gen.Config)
-	logger := log.New(os.Stdout, log.Prefix(), log.Flags())
+	logger := log.New(os.Stdout, "[validator]: ", log.Flags())
 
 	go func() {
 		for config := range in {
-			logger.SetPrefix("[validator]: ")
-
 			ls := gojsonschema.NewGoLoader(config.Schema)
 			cl := gojsonschema.NewGoLoader(config.Content)
 			result, err := gojsonschema.Validate(ls, cl)

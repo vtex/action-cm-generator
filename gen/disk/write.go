@@ -28,11 +28,9 @@ func jsonExt(absPath string) string {
 
 // Export receives a channel of configuration and write them on disk.
 func (e *Exporter) Export(in <-chan gen.Config) error {
-	logger := log.New(os.Stdout, log.Prefix(), log.Flags())
+	logger := log.New(os.Stdout, "[exporter]: ", log.Flags())
 
 	for config := range in {
-		logger.SetPrefix("[exporter]: ")
-
 		newpath := strings.Replace(config.Path, e.InputDir, e.OutputDir, 1)
 		err := os.MkdirAll(filepath.Dir(newpath), os.ModePerm)
 

@@ -16,12 +16,10 @@ type Compiler struct {
 // Compile compiles all files and return the generated config files.
 func (c *Compiler) Compile(files <-chan gen.File) <-chan gen.Compiled {
 	output := make(chan gen.Compiled)
-	logger := log.New(os.Stdout, log.Prefix(), log.Flags())
+	logger := log.New(os.Stdout, "[compiler]: ", log.Flags())
 
 	go func() {
 		for file := range files {
-			logger.SetPrefix("[compiler]: [%s]")
-
 			path := file.Path
 
 			out, err := c.VM.EvaluateFile(path)

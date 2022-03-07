@@ -17,12 +17,10 @@ const schemaKey = "__schema"
 // Parse receives a channel of compiled files and returns a channel of configuration parsed.
 func (p *Parser) Parse(in <-chan gen.Compiled) (out <-chan gen.Config) {
 	ch := make(chan gen.Config)
-	logger := log.New(os.Stdout, log.Prefix(), log.Flags())
+	logger := log.New(os.Stdout, "[parser]: ", log.Flags())
 
 	go func() {
 		for compiled := range in {
-			logger.SetPrefix("[parser]: ")
-
 			var config map[string]interface{}
 			err := json.Unmarshal([]byte(compiled.Content), &config)
 
