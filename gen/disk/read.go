@@ -25,6 +25,8 @@ func (r *Reader) Read() <-chan gen.File {
 	ch := make(chan gen.File)
 
 	go func() {
+		defer close(ch)
+
 		err := filepath.Walk(r.Dir,
 			func(path string, f os.FileInfo, err error) error {
 				if err != nil {
@@ -43,8 +45,6 @@ func (r *Reader) Read() <-chan gen.File {
 				}
 				return nil
 			})
-
-		close(ch)
 
 		if err != nil {
 			log.Fatal(err)

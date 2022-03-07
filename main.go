@@ -7,9 +7,9 @@ import (
 	"github.com/google/go-jsonnet"
 	"github.com/sethvargo/go-githubactions"
 	"github.com/vtex/action-cm-generator/gen"
-	"github.com/vtex/action-cm-generator/gen/config"
+	"github.com/vtex/action-cm-generator/gen/compile"
 	"github.com/vtex/action-cm-generator/gen/disk"
-	"github.com/vtex/action-cm-generator/gen/jn"
+	"github.com/vtex/action-cm-generator/gen/validate"
 )
 
 const dirIn = "in"
@@ -36,9 +36,9 @@ func main() {
 
 	runner := gen.Runner{
 		Reader:    disk.NewReader(inputDir),
-		Compiler:  jn.NewCompiler(jsonnet.MakeVM()),
-		Parser:    jn.NewParser(),
-		Validator: config.NewValidator(),
+		Compiler:  compile.NewJNCompiler(jsonnet.MakeVM()),
+		Parser:    compile.NewJSONParser(),
+		Validator: validate.NewJSONSchema(),
 		Exporter:  disk.NewExporter(inputDir, outputDir),
 	}
 

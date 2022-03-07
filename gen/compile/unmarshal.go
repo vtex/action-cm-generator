@@ -1,4 +1,4 @@
-package jn
+package compile
 
 import (
 	"encoding/json"
@@ -9,17 +9,19 @@ import (
 	"github.com/vtex/action-cm-generator/gen"
 )
 
-// Parser receives a compiled file and parse into a Config Struct.
-type Parser struct{}
+// JSONParser receives a compiled file and parse into a Config Struct.
+type JSONParser struct{}
 
 const schemaKey = "__schema"
 
 // Parse receives a channel of compiled files and returns a channel of configuration parsed.
-func (p *Parser) Parse(in <-chan gen.Compiled) (out <-chan gen.Config) {
+func (p *JSONParser) Parse(in <-chan gen.Compiled) (out <-chan gen.Config) {
 	ch := make(chan gen.Config)
 	logger := log.New(os.Stdout, "[parser]: ", log.Flags())
 
 	go func() {
+		defer close(ch)
+
 		for compiled := range in {
 			var config map[string]interface{}
 			err := json.Unmarshal([]byte(compiled.Content), &config)
@@ -41,14 +43,12 @@ func (p *Parser) Parse(in <-chan gen.Compiled) (out <-chan gen.Config) {
 				Path:    compiled.Path,
 			}
 		}
-
-		close(ch)
 	}()
 
 	return ch
 }
 
-// NewParser creates a new jsonnet parser instance.
-func NewParser() *Parser {
-	return &Parser{}
+// NewJSONParser creates a new jsonnet parser instance.
+func NewJSONParser() *JSONParser {
+	return &JSONParser{}
 }

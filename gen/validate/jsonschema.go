@@ -1,4 +1,4 @@
-package config
+package validate
 
 import (
 	"fmt"
@@ -19,6 +19,8 @@ func (v *Validator) Validate(in <-chan gen.Config) (out <-chan gen.Config) {
 	logger := log.New(os.Stdout, "[validator]: ", log.Flags())
 
 	go func() {
+		defer close(ch)
+
 		for config := range in {
 			ls := gojsonschema.NewGoLoader(config.Schema)
 			cl := gojsonschema.NewGoLoader(config.Content)
@@ -48,14 +50,12 @@ func (v *Validator) Validate(in <-chan gen.Config) (out <-chan gen.Config) {
 
 			ch <- config
 		}
-
-		close(ch)
 	}()
 
 	return ch
 }
 
-// NewValidator creates a new validator instance.
-func NewValidator() *Validator {
+// NewJSONSchema creates a new validator for jsonschema instance.
+func NewJSONSchema() *Validator {
 	return &Validator{}
 }

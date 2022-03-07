@@ -1,4 +1,4 @@
-package jn
+package compile
 
 import (
 	"log"
@@ -8,17 +8,19 @@ import (
 	"github.com/vtex/action-cm-generator/gen"
 )
 
-// Compiler compile jsonnet files into json definitions.
-type Compiler struct {
+// JNCompiler compile jsonnet files into json definitions.
+type JNCompiler struct {
 	VM *jsonnet.VM
 }
 
 // Compile compiles all files and return the generated config files.
-func (c *Compiler) Compile(files <-chan gen.File) <-chan gen.Compiled {
+func (c *JNCompiler) Compile(files <-chan gen.File) <-chan gen.Compiled {
 	output := make(chan gen.Compiled)
 	logger := log.New(os.Stdout, "[compiler]: ", log.Flags())
 
 	go func() {
+		defer close(output)
+
 		for file := range files {
 			path := file.Path
 
@@ -32,16 +34,14 @@ func (c *Compiler) Compile(files <-chan gen.File) <-chan gen.Compiled {
 				Content: out,
 			}
 		}
-
-		close(output)
 	}()
 
 	return output
 }
 
-// NewCompiler creates a new jsonnet compiler instance.
-func NewCompiler(vm *jsonnet.VM) *Compiler {
-	return &Compiler{
+// NewJNCompiler creates a new jsonnet compiler instance.
+func NewJNCompiler(vm *jsonnet.VM) *JNCompiler {
+	return &JNCompiler{
 		VM: vm,
 	}
 }
