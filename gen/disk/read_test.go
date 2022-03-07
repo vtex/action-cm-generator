@@ -22,7 +22,7 @@ func TestReadFromDisk(t *testing.T) {
 			So(ioutil.WriteFile(filePath, []byte(`{}`), 0644), ShouldBeNil)
 			So(ioutil.WriteFile(notJsonnet, []byte(`{}`), 0644), ShouldBeNil)
 			Convey("Retriever should read only jsonnet file", func() {
-				out := retriever.Read()
+				out := retriever.Retrieve()
 				So(<-out, ShouldNotBeNil)
 				So(<-out, ShouldBeZeroValue)
 			})
