@@ -8,7 +8,7 @@ type File struct {
 	Content string
 }
 
-// Reader is responsible for read files.
-type Reader interface {
-	Read() <-chan File
+// Retriever is responsible for read files.
+type Retriever interface {
+	Retrieve() <-chan File
 }

@@ -10,19 +10,19 @@ import (
 )
 
 func TestReadFromDisk(t *testing.T) {
-	Convey("Given a disk reader", t, func() {
+	Convey("Given a disk retriever", t, func() {
 		dir := "/tmp/test-jsonnet"
 		filePath := "/tmp/test-jsonnet/valid.jsonnet"
 		notJsonnet := "/tmp/test-jsonnet/valid.jsonnet"
 
-		reader := NewReader(dir)
+		retriever := NewRetriever(dir)
 
 		So(os.MkdirAll(filepath.Dir(filePath), os.ModePerm), ShouldBeNil)
 		Convey("And a valid jsonnet", func() {
 			So(ioutil.WriteFile(filePath, []byte(`{}`), 0644), ShouldBeNil)
 			So(ioutil.WriteFile(notJsonnet, []byte(`{}`), 0644), ShouldBeNil)
-			Convey("Reader should read only jsonnet file", func() {
-				out := reader.Read()
+			Convey("Retriever should read only jsonnet file", func() {
+				out := retriever.Read()
 				So(<-out, ShouldNotBeNil)
 				So(<-out, ShouldBeZeroValue)
 			})

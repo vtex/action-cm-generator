@@ -35,7 +35,7 @@ func main() {
 	}
 
 	runner := gen.Runner{
-		Reader:    disk.NewReader(inputDir),
+		Retriever: disk.NewRetriever(inputDir),
 		Compiler:  compile.NewJNCompiler(jsonnet.MakeVM()),
 		Parser:    compile.NewJSONParser(),
 		Validator: validate.NewJSONSchema(),

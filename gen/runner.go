@@ -2,7 +2,7 @@ package gen
 
 // Runner is used to compose generating pipeline and run it.
 type Runner struct {
-	Reader    Reader
+	Retriever Retriever
 	Compiler  Compiler
 	Parser    Parser
 	Validator Validator
@@ -15,7 +15,7 @@ func (s *Runner) Run() error {
 		s.Validator.Validate(
 			s.Parser.Parse(
 				s.Compiler.Compile(
-					s.Reader.Read(),
+					s.Retriever.Retrieve(),
 				),
 			),
 		),

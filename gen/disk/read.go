@@ -15,13 +15,13 @@ func isJsonnet(filePath string) bool {
 	return filepath.Ext(filePath) == jsonnetExt
 }
 
-// Reader is responsible for read files.
-type Reader struct {
+// Retriever is responsible for read files.
+type Retriever struct {
 	Dir string
 }
 
-// Read returns a channel of file.
-func (r *Reader) Read() <-chan gen.File {
+// Retrieve returns a channel of file.
+func (r *Retriever) Retrieve() <-chan gen.File {
 	ch := make(chan gen.File)
 
 	go func() {
@@ -54,9 +54,9 @@ func (r *Reader) Read() <-chan gen.File {
 	return ch
 }
 
-// NewReader creates a new disk reader.
-func NewReader(dir string) *Reader {
-	return &Reader{
+// NewRetriever creates a new disk retriever.
+func NewRetriever(dir string) *Retriever {
+	return &Retriever{
 		Dir: dir,
 	}
 }
