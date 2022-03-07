@@ -39,7 +39,7 @@ func (v *Validator) Validate(in <-chan gen.Config) (out <-chan gen.Config) {
 					logger.Println(err)
 				}
 
-				logger.Fatal(fmt.Errorf("\n>>>>>> Schema\n %s\n>>>>>> Content\n %s\n error when trying to validate the config %s %v", schema, content, config.Path, err))
+				logger.Fatal(fmt.Errorf("\n>Schema\n %s\n>Content\n %s\n error when trying to validate the config %s %v", schema, content, config.Path, err))
 			}
 
 			resultErrs := result.Errors()
