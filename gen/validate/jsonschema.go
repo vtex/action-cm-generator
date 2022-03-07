@@ -45,7 +45,7 @@ func (v *Validator) Validate(in <-chan gen.Config) (out <-chan gen.Config) {
 			resultErrs := result.Errors()
 
 			if len(resultErrs) > 0 || !result.Valid() {
-				logger.Fatalln(resultErrs)
+				logger.Fatalf("error when validating %s: %s", config.Path, resultErrs)
 			}
 
 			ch <- config
