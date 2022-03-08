@@ -23,7 +23,7 @@ const jsonExtension = ".json"
 // jsonExt sets the file extension to json.
 func jsonExt(absPath string) string {
 	ext := path.Ext(absPath)
-	return absPath[0:len(absPath)-len(ext)] + jsonExtension
+	return strings.Replace(absPath, ext, jsonExtension, 1)
 }
 
 // Export receives a channel of configuration and write them on disk.
