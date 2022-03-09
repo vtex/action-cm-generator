@@ -26,7 +26,7 @@ func (c *JNCompiler) Compile(files <-chan gen.File) <-chan gen.Compiled {
 
 			out, err := c.VM.EvaluateFile(path)
 			if err != nil {
-				logger.Println(err)
+				logger.Printf("error when trying to compile %s, %v", file.Path, err)
 				continue
 			}
 			output <- gen.Compiled{

@@ -2,7 +2,7 @@ package compile
 
 import (
 	"encoding/json"
-	"errors"
+	"fmt"
 	"log"
 	"os"
 
@@ -32,7 +32,7 @@ func (p *JSONParser) Parse(in <-chan gen.Compiled) (out <-chan gen.Config) {
 
 			schema, ok := config[schemaKey]
 			if !ok {
-				logger.Fatal(errors.New("the configuration does not contain __schema property, did you try to use .schema?"))
+				logger.Fatal(fmt.Errorf("the configuration %s does not contain __schema property, did you try to use .schema?", compiled.Path))
 			}
 
 			delete(config, schemaKey) // remove schema from final result
