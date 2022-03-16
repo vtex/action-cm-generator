@@ -1,6 +1,6 @@
 module github.com/vtex/action-cm-generator
 
-go 1.17
+go 1.18
 
 require (
 	github.com/google/go-jsonnet v0.18.0
