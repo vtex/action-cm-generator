@@ -1,5 +1,5 @@
 # Specify the version of Go to use
-FROM golang:1.17
+FROM golang:1.18
 
 # Copy all the files from the host into the container
 WORKDIR /src
